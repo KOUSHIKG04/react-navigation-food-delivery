@@ -1,55 +1,58 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+export const palettes = {
+  light: {
+    background: "#f7f4ef",
+    surface: "#ffffff",
+    surfaceAlt: "#efe8dd",
+    text: "#171717",
+    mutedText: "#625d57",
+    border: "#ddd3c7",
+    accent: "#d64c2f",
+    accentSoft: "#f7ddd5",
+    hero: "#22201f",
+    heroText: "#fffaf5",
+  },
+  dark: {
+    background: "#151311",
+    surface: "#211e1b",
+    surfaceAlt: "#2d2823",
+    text: "#f8f4ef",
+    mutedText: "#c4b8ab",
+    border: "#3a342f",
+    accent: "#ff7a59",
+    accentSoft: "#40241d",
+    hero: "#0d0c0b",
+    heroText: "#fffaf5",
+  },
+} as const;
 
-import '@/global.css';
-
-import { Platform } from 'react-native';
+export type ThemeName = keyof typeof palettes;
+export type AppPalette = (typeof palettes)[ThemeName];
 
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    text: palettes.light.text,
+    background: palettes.light.background,
+    backgroundElement: palettes.light.surface,
+    backgroundSelected: palettes.light.surfaceAlt,
+    textSecondary: palettes.light.mutedText,
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    text: palettes.dark.text,
+    background: palettes.dark.background,
+    backgroundElement: palettes.dark.surface,
+    backgroundSelected: palettes.dark.surfaceAlt,
+    textSecondary: palettes.dark.mutedText,
   },
 } as const;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
-  },
-});
+export const Fonts = {
+  sans: "system",
+  serif: "serif",
+  rounded: "system",
+  mono: "monospace",
+} as const;
 
 export const Spacing = {
   half: 2,
@@ -60,6 +63,3 @@ export const Spacing = {
   five: 32,
   six: 64,
 } as const;
-
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 800;
