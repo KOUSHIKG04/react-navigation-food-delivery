@@ -15,7 +15,7 @@ export function CartScreen({
   const { colors } = useAppTheme();
 
   return (
-    <ScreenShell safeTop={false}>
+    <ScreenShell contentStyle={styles.content} safeTop={false}>
       <Text style={[styles.title, { color: colors.text }]}>Cart</Text>
       {cartItems.map((item) => (
         <View key={item.dishId} style={[styles.lineItem, { backgroundColor: colors.surface }]}>
@@ -41,30 +41,55 @@ export function CartScreen({
         <Text style={[styles.totalLabel, { color: colors.mutedText }]}>Total</Text>
         <Text style={[styles.totalAmount, { color: colors.accent }]}>${cartTotal}</Text>
       </View>
-      <AppButton label={`Add another from ${route.params.restaurantName}`} onPress={() => navigation.goBack()} secondary />
-      <AppButton label="Back to Home" onPress={() => navigation.replace("Home")} style={styles.gap} />
-      <AppButton
-        label="Reset to Home"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Home" }],
-          })
-        }
-        secondary
-        style={styles.gap}
-      />
+      <View style={styles.actionsRow}>
+        <AppButton
+          icon="add-circle-outline"
+          label="Add More"
+          onPress={() => navigation.goBack()}
+          secondary
+          style={styles.actionButton}
+        />
+        <AppButton
+          icon="home-outline"
+          label="Home"
+          onPress={() => navigation.replace("Home")}
+          style={styles.actionButton}
+        />
+        <AppButton
+          icon="refresh-outline"
+          label="Reset"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Home" }],
+            })
+          }
+          secondary
+          style={styles.actionButton}
+        />
+      </View>
     </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
+  actionButton: {
+    flex: 1,
+    minHeight: 46,
+    paddingHorizontal: 8,
+  },
+  actionsRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: "auto",
+    paddingTop: 20,
+  },
+  content: {
+    flex: 1,
+  },
   amount: {
     fontSize: 16,
     fontWeight: "800",
-  },
-  gap: {
-    marginTop: 12,
   },
   lineItem: {
     alignItems: "center",

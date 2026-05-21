@@ -5,11 +5,13 @@ type AppContextValue = {
   cartItems: CartItem[];
   cartCount: number;
   cartTotal: number;
+  deliveredOrders: DeliveredOrder[];
   hasCompletedOnboarding: boolean;
   hydrated: boolean;
   isAuthenticated: boolean;
   addToCart: (item: Omit<CartItem, "quantity">) => void;
   decreaseQuantity: (dishId: string) => void;
+  deliverOrder: () => void;
   increaseQuantity: (dishId: string) => void;
   clearCart: () => void;
   completeOnboarding: () => Promise<void>;
@@ -26,6 +28,13 @@ export type CartItem = {
   quantity: number;
 };
 
+export type DeliveredOrder = {
+  id: string;
+  items: CartItem[];
+  deliveredAt: string;
+  total: number;
+};
+
 const AUTH_KEY = "foodapp.auth";
 const ONBOARDING_KEY = "foodapp.onboarding";
 const AppContext = createContext<AppContextValue | null>(null);
@@ -35,6 +44,7 @@ export function AppProvider({ children }: PropsWithChildren) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [deliveredOrders, setDeliveredOrders] = useState<DeliveredOrder[]>([]);
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
@@ -81,6 +91,23 @@ export function AppProvider({ children }: PropsWithChildren) {
             )
             .filter((item) => item.quantity > 0),
         ),
+      deliverOrder: () => {
+        if (cartItems.length === 0) {
+          return;
+        }
+
+        setDeliveredOrders((orders) => [
+          {
+            deliveredAt: new Date().toLocaleString(),
+            id: `order-${Date.now()}`,
+            items: cartItems,
+            total: cartTotal,
+          },
+          ...orders,
+        ]);
+        setCartItems([]);
+      },
+      deliveredOrders,
       completeOnboarding: async () => {
         setHasCompletedOnboarding(true);
         await AsyncStorage.setItem(ONBOARDING_KEY, "true");
@@ -90,7 +117,11 @@ export function AppProvider({ children }: PropsWithChildren) {
       isAuthenticated,
       login: async () => {
         setIsAuthenticated(true);
-        await AsyncStorage.setItem(AUTH_KEY, "true");
+        setHasCompletedOnboarding(false);
+        await Promise.all([
+          AsyncStorage.setItem(AUTH_KEY, "true"),
+          AsyncStorage.removeItem(ONBOARDING_KEY),
+        ]);
       },
       increaseQuantity: (dishId) =>
         setCartItems((items) =>
@@ -100,12 +131,13 @@ export function AppProvider({ children }: PropsWithChildren) {
         ),
       logout: async () => {
         setCartItems([]);
+        setDeliveredOrders([]);
         setIsAuthenticated(false);
         setHasCompletedOnboarding(false);
         await Promise.all([AsyncStorage.removeItem(AUTH_KEY), AsyncStorage.removeItem(ONBOARDING_KEY)]);
       },
     }),
-    [cartCount, cartItems, cartTotal, hasCompletedOnboarding, hydrated, isAuthenticated],
+    [cartCount, cartItems, cartTotal, deliveredOrders, hasCompletedOnboarding, hydrated, isAuthenticated],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

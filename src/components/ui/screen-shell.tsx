@@ -1,5 +1,14 @@
 import { PropsWithChildren } from "react";
-import { ScrollView, StyleProp, StyleSheet, View, ViewStyle, useWindowDimensions } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+  useWindowDimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppTheme } from "../../state/theme-context";
 
@@ -19,13 +28,19 @@ export function ScreenShell({ children, contentStyle, safeTop = true }: ScreenSh
       edges={safeTop ? ["top", "left", "right"] : ["left", "right"]}
       style={[styles.safeArea, { backgroundColor: colors.background }]}
     >
-      <ScrollView
-        contentContainerStyle={[styles.content, isCompact && styles.compactContent]}
-        showsVerticalScrollIndicator={false}
-        style={[styles.screen, { backgroundColor: colors.background }]}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoidingView}
       >
-        <View style={[styles.inner, { width: contentWidth }, contentStyle]}>{children}</View>
-      </ScrollView>
+        <ScrollView
+          contentContainerStyle={[styles.content, isCompact && styles.compactContent]}
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}
+          style={[styles.screen, { backgroundColor: colors.background }]}
+        >
+          <View style={[styles.inner, { width: contentWidth }, contentStyle]}>{children}</View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -41,6 +56,9 @@ const styles = StyleSheet.create({
   },
   inner: {
     flexGrow: 1,
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
   screen: {
     backgroundColor: "#fffaf7",

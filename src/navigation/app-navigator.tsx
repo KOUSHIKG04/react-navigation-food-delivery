@@ -2,13 +2,12 @@ import { Ionicons } from "@expo/vector-icons";
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
-  DrawerItem,
   createDrawerNavigator,
 } from "@react-navigation/drawer";
 import { NavigatorScreenParams, getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAppState } from "../state/app-context";
 import { LoginScreen } from "../screens/auth/login-screen";
 import { HelpScreen } from "../screens/drawer/help-screen";
@@ -92,8 +91,10 @@ function RestaurantStackNavigator() {
         animation: "slide_from_right",
         contentStyle: { backgroundColor: colors.background },
         headerBackTitle: "Back",
-        headerStyle: { backgroundColor: colors.hero },
-        headerTintColor: "#ffffff",
+        headerShadowVisible: false,
+        headerStyle: { backgroundColor: colors.surface },
+        headerTitleStyle: { color: colors.text, fontWeight: "800" },
+        headerTintColor: colors.text,
       }}
     >
       <HomeStack.Screen name="Home" component={HomeScreen} options={{ headerTitle: "Food Delivery" }} />
@@ -175,7 +176,9 @@ function ProfileStackNavigator() {
       screenOptions={{
         animation: "slide_from_right",
         contentStyle: { backgroundColor: colors.background },
+        headerShadowVisible: false,
         headerStyle: { backgroundColor: colors.surface },
+        headerTitleStyle: { color: colors.text, fontWeight: "800" },
         headerTintColor: colors.text,
       }}
     >
@@ -194,18 +197,56 @@ function ProfileStackNavigator() {
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   const { logout } = useAppState();
   const { colors } = useAppTheme();
+  const drawerItems = [
+    {
+      icon: "receipt-outline",
+      label: "My Orders",
+      onPress: () => props.navigation.navigate("MyOrders"),
+    },
+    {
+      icon: "settings-outline",
+      label: "Settings",
+      onPress: () => props.navigation.navigate("Settings"),
+    },
+    {
+      icon: "help-circle-outline",
+      label: "Help",
+      onPress: () => props.navigation.navigate("Help"),
+    },
+    {
+      icon: "log-out-outline",
+      label: "Logout",
+      onPress: logout,
+    },
+  ] as const;
 
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={styles.drawerContent}>
-      <View style={[styles.drawerProfile, { backgroundColor: colors.surface }]}>
+      <TouchableOpacity
+        activeOpacity={0.85}
+        onPress={() => props.navigation.navigate("Tabs", { screen: "Profile" })}
+        style={[styles.drawerProfile, { backgroundColor: colors.surface }]}
+      >
         <Image source={{ uri: "https://i.pravatar.cc/120?img=12" }} style={styles.avatar} />
         <Text style={[styles.drawerName, { color: colors.text }]}>Koushik G</Text>
         <Text style={[styles.drawerEmail, { color: colors.mutedText }]}>koushik@example.com</Text>
+      </TouchableOpacity>
+      <View style={styles.drawerList}>
+        {drawerItems.map((item) => (
+          <TouchableOpacity
+            activeOpacity={0.84}
+            key={item.label}
+            onPress={item.onPress}
+            style={[styles.drawerPill, { backgroundColor: colors.surface }]}
+          >
+            <View style={styles.drawerPillLeft}>
+              <Ionicons color={colors.accent} name={item.icon} size={20} />
+              <Text style={[styles.drawerPillLabel, { color: colors.text }]}>{item.label}</Text>
+            </View>
+            <Ionicons color={colors.mutedText} name="chevron-forward" size={18} />
+          </TouchableOpacity>
+        ))}
       </View>
-      <DrawerItem label="My Orders" onPress={() => props.navigation.navigate("MyOrders")} />
-      <DrawerItem label="Settings" onPress={() => props.navigation.navigate("Settings")} />
-      <DrawerItem label="Help" onPress={() => props.navigation.navigate("Help")} />
-      <DrawerItem label="Logout" onPress={logout} />
     </DrawerContentScrollView>
   );
 }
@@ -217,9 +258,16 @@ function MainDrawer() {
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
+        drawerActiveBackgroundColor: colors.accentSoft,
         drawerActiveTintColor: colors.accent,
+        drawerInactiveTintColor: colors.text,
+        drawerStyle: { backgroundColor: colors.background },
         drawerLabelStyle: { fontWeight: "700" },
+        headerShadowVisible: false,
+        headerStyle: { backgroundColor: colors.surface },
+        headerTitleStyle: { color: colors.text, fontWeight: "800" },
         headerTintColor: colors.text,
+        sceneStyle: { backgroundColor: colors.background },
       }}
     >
       <Drawer.Screen name="Tabs" component={MainTabs} options={{ headerShown: false }} />
@@ -266,8 +314,29 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     marginBottom: 4,
   },
+  drawerPill: {
+    alignItems: "center",
+    borderRadius: 999,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    minHeight: 56,
+    paddingHorizontal: 18,
+  },
+  drawerPillLabel: {
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  drawerPillLeft: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 12,
+  },
   drawerProfile: {
     marginBottom: 12,
     padding: 20,
+  },
+  drawerList: {
+    gap: 12,
+    paddingHorizontal: 12,
   },
 });

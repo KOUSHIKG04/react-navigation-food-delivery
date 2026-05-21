@@ -7,7 +7,7 @@ import { useAppState } from "../../state/app-context";
 import { useAppTheme } from "../../state/theme-context";
 
 export function OrdersScreen() {
-  const { cartItems, cartTotal, clearCart } = useAppState();
+  const { cartItems, cartTotal, deliverOrder } = useAppState();
   const { colors } = useAppTheme();
 
   return (
@@ -36,7 +36,7 @@ export function OrdersScreen() {
             <Text style={[styles.summaryLabel, { color: colors.mutedText }]}>Current total</Text>
             <Text style={[styles.summaryAmount, { color: colors.accent }]}>${cartTotal}</Text>
           </View>
-          <AppButton icon="checkmark-circle-outline" label="Mark Delivered" onPress={clearCart} />
+          <AppButton icon="checkmark-circle-outline" label="Mark Delivered" onPress={deliverOrder} />
         </>
       )}
     </ScreenShell>

@@ -21,7 +21,16 @@ export function ProfileScreen({ navigation }: ProfileScreenProps) {
 
   return (
     <ScreenShell>
-      <Text style={[styles.title, { color: colors.text }]}>Profile</Text>
+      <View style={styles.headerRow}>
+        <Text style={[styles.title, { color: colors.text }]}>Profile</Text>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => navigation.getParent()?.getParent()?.dispatch(DrawerActions.openDrawer())}
+          style={[styles.drawerButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        >
+          <Ionicons color={colors.text} name="menu-outline" size={22} />
+        </TouchableOpacity>
+      </View>
       <Text style={[styles.body, { color: colors.mutedText }]}>Manage account details, orders, and support.</Text>
       <View style={[styles.card, { backgroundColor: colors.hero }]}>
         <Image source={{ uri: "https://i.pravatar.cc/120?img=12" }} style={styles.avatar} />
@@ -31,17 +40,6 @@ export function ProfileScreen({ navigation }: ProfileScreenProps) {
         </View>
       </View>
       <View style={styles.list}>
-        {/* <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => navigation.getParent()?.getParent()?.dispatch(DrawerActions.openDrawer())}
-          style={[styles.row, { backgroundColor: colors.surface }]}
-        >
-          <View style={styles.rowLeft}>
-            <Ionicons color={colors.accent} name="menu-outline" size={20} />
-            <Text style={[styles.rowLabel, { color: colors.text }]}>Open Drawer</Text>
-          </View>
-          <Ionicons color="#9ca3af" name="chevron-forward" size={18} />
-        </TouchableOpacity> */}
         {actions.map((action) => (
           <TouchableOpacity
             key={action.route}
@@ -123,6 +121,20 @@ const styles = StyleSheet.create({
     color: "#d1d5db",
     fontSize: 14,
   },
+  drawerButton: {
+    alignItems: "center",
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 42,
+    justifyContent: "center",
+    width: 42,
+  },
+  headerRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
   name: {
     color: "#ffffff",
     fontSize: 20,
@@ -136,7 +148,6 @@ const styles = StyleSheet.create({
     color: "#111827",
     fontSize: 28,
     fontWeight: "800",
-    marginBottom: 8,
   },
   list: {
     gap: 12,

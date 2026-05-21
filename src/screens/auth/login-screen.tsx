@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { useState } from "react";
+import { Keyboard, StyleSheet, Text, TextInput, View, useWindowDimensions } from "react-native";
 
 import { AppButton } from "../../components/ui/app-button";
 import { ScreenShell } from "../../components/ui/screen-shell";
@@ -10,9 +11,12 @@ export function LoginScreen() {
   const { login } = useAppState();
   const { colors } = useAppTheme();
   const { height } = useWindowDimensions();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const isCompact = height < 720;
 
   async function handleLogin() {
+    Keyboard.dismiss();
     await login();
   }
 
@@ -29,6 +33,39 @@ export function LoginScreen() {
         <Text style={[styles.subtitle, { color: colors.mutedText }]}>
           Pick a kitchen, build your cart, and get back to your last order in seconds.
         </Text>
+      </View>
+
+      <View style={styles.form}>
+        <View style={[styles.inputRow, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Ionicons color={colors.mutedText} name="mail-outline" size={20} />
+          <TextInput
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+            onChangeText={setEmail}
+            placeholder="Email"
+            placeholderTextColor={colors.mutedText}
+            returnKeyType="next"
+            style={[styles.input, { color: colors.text }]}
+            textContentType="emailAddress"
+            value={email}
+          />
+        </View>
+
+        <View style={[styles.inputRow, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Ionicons color={colors.mutedText} name="lock-closed-outline" size={20} />
+          <TextInput
+            onChangeText={setPassword}
+            onSubmitEditing={handleLogin}
+            placeholder="Password"
+            placeholderTextColor={colors.mutedText}
+            returnKeyType="done"
+            secureTextEntry
+            style={[styles.input, { color: colors.text }]}
+            textContentType="password"
+            value={password}
+          />
+        </View>
       </View>
 
       <View style={styles.footer}>
@@ -70,10 +107,27 @@ const styles = StyleSheet.create({
   footer: {
     width: "100%",
   },
+  form: {
+    gap: 12,
+    width: "100%",
+  },
   heroCopy: {
     alignItems: "center",
     alignSelf: "center",
     maxWidth: 340,
+  },
+  input: {
+    flex: 1,
+    fontSize: 15,
+    minHeight: 48,
+  },
+  inputRow: {
+    alignItems: "center",
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: 10,
+    paddingHorizontal: 14,
   },
   subtitle: {
     fontSize: 16,

@@ -75,7 +75,6 @@ export function RestaurantDetailScreen({
         label="View Cart"
         onPress={() => navigation.navigate("Cart", { restaurantName, price })}
       />
-      <AppButton icon="arrow-back" label="Go Back" onPress={() => navigation.goBack()} secondary style={styles.gap} />
     </ScreenShell>
   );
 }
@@ -128,9 +127,6 @@ const styles = StyleSheet.create({
   dishPrice: {
     fontSize: 15,
     fontWeight: "800",
-  },
-  gap: {
-    marginTop: 12,
   },
   image: {
     borderRadius: 8,
