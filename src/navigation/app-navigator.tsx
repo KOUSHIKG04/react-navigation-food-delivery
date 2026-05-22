@@ -7,12 +7,12 @@ import {
 import { NavigatorScreenParams, getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAppState } from "../state/app-context";
 import { LoginScreen } from "../screens/auth/login-screen";
-import { HelpScreen } from "../screens/drawer/help-screen";
-import { MyOrdersScreen } from "../screens/drawer/my-orders-screen";
-import { SettingsScreen } from "../screens/drawer/settings-screen";
+import { HelpScreen } from "../screens/profile/help-screen";
+import { MyOrdersScreen } from "../screens/profile/my-orders-screen";
+import { SettingsScreen } from "../screens/profile/settings-screen";
 import { CartScreen } from "../screens/home/cart-screen";
 import { HomeScreen } from "../screens/home/home-screen";
 import { RestaurantDetailScreen } from "../screens/home/restaurant-detail-screen";
@@ -197,6 +197,7 @@ function ProfileStackNavigator() {
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   const { logout } = useAppState();
   const { colors } = useAppTheme();
+
   const drawerItems = [
     {
       icon: "receipt-outline",
@@ -231,6 +232,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
         <Text style={[styles.drawerName, { color: colors.text }]}>Koushik G</Text>
         <Text style={[styles.drawerEmail, { color: colors.mutedText }]}>koushik@example.com</Text>
       </TouchableOpacity>
+
       <View style={styles.drawerList}>
         {drawerItems.map((item) => (
           <TouchableOpacity
@@ -261,12 +263,12 @@ function MainDrawer() {
         drawerActiveBackgroundColor: colors.accentSoft,
         drawerActiveTintColor: colors.accent,
         drawerInactiveTintColor: colors.text,
-        drawerStyle: { backgroundColor: colors.background },
         drawerLabelStyle: { fontWeight: "700" },
+        drawerStyle: { backgroundColor: colors.background },
         headerShadowVisible: false,
         headerStyle: { backgroundColor: colors.surface },
-        headerTitleStyle: { color: colors.text, fontWeight: "800" },
         headerTintColor: colors.text,
+        headerTitleStyle: { color: colors.text, fontWeight: "800" },
         sceneStyle: { backgroundColor: colors.background },
       }}
     >
@@ -279,7 +281,16 @@ function MainDrawer() {
 }
 
 export function AppNavigator() {
+  const { hasSeenOnboarding, isLoggedIn, isReady } = useAppState();
   const { colors } = useAppTheme();
+
+  if (!isReady) {
+    return (
+      <View style={[styles.loadingScreen, { backgroundColor: colors.background }]}>
+        <ActivityIndicator color={colors.accent} size="large" />
+      </View>
+    );
+  }
 
   return (
     <RootStack.Navigator
@@ -289,9 +300,13 @@ export function AppNavigator() {
         headerShown: false,
       }}
     >
-      <RootStack.Screen name="Auth" component={AuthNavigator} />
-      <RootStack.Screen name="Onboarding" component={OnboardingScreen} />
-      <RootStack.Screen name="Main" component={MainDrawer} />
+      {!isLoggedIn ? (
+        <RootStack.Screen name="Auth" component={AuthNavigator} />
+      ) : !hasSeenOnboarding ? (
+        <RootStack.Screen name="Onboarding" component={OnboardingScreen} />
+      ) : (
+        <RootStack.Screen name="Main" component={MainDrawer} />
+      )}
     </RootStack.Navigator>
   );
 }
@@ -308,6 +323,10 @@ const styles = StyleSheet.create({
   },
   drawerEmail: {
     fontSize: 13,
+  },
+  drawerList: {
+    gap: 12,
+    paddingHorizontal: 12,
   },
   drawerName: {
     fontSize: 18,
@@ -335,8 +354,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     padding: 20,
   },
-  drawerList: {
-    gap: 12,
-    paddingHorizontal: 12,
+  loadingScreen: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
   },
 });

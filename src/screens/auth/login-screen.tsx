@@ -15,9 +15,9 @@ export function LoginScreen() {
   const [password, setPassword] = useState("");
   const isCompact = height < 720;
 
-  async function handleLogin() {
+  function handleLogin() {
     Keyboard.dismiss();
-    await login();
+    login();
   }
 
   return (

@@ -1,5 +1,4 @@
-import { createContext, PropsWithChildren, useContext, useMemo, useState } from "react";
-import { useColorScheme } from "react-native";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { AppPalette, palettes, ThemeName } from "../constants/theme";
 
 type ThemeContextValue = {
@@ -8,30 +7,27 @@ type ThemeContextValue = {
   toggleTheme: () => void;
 };
 
-const ThemeContext = createContext<ThemeContextValue | null>(null);
+const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export function ThemeProvider({ children }: PropsWithChildren) {
-  const systemTheme = useColorScheme();
-  const [overrideTheme, setOverrideTheme] = useState<ThemeName | null>(null);
-  const theme: ThemeName = overrideTheme ?? (systemTheme === "dark" ? "dark" : "light");
+  const [theme, setTheme] = useState<ThemeName>("light");
 
-  const value = useMemo(
-    () => ({
-      colors: palettes[theme],
-      theme,
-      toggleTheme: () => setOverrideTheme((current) => (current === "dark" ? "light" : "dark")),
-    }),
-    [theme],
+  function toggleTheme() {
+    setTheme(theme === "light" ? "dark" : "light");
+  }
+
+  return (
+    <ThemeContext.Provider value={{ colors: palettes[theme], theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
   );
-
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useAppTheme() {
   const context = useContext(ThemeContext);
 
   if (!context) {
-    throw new Error("useAppTheme must be used within ThemeProvider");
+    throw new Error("useAppTheme must be used inside ThemeProvider");
   }
 
   return context;

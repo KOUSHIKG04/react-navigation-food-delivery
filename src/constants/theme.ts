@@ -27,39 +27,3 @@ export const palettes = {
 
 export type ThemeName = keyof typeof palettes;
 export type AppPalette = (typeof palettes)[ThemeName];
-
-export const Colors = {
-  light: {
-    text: palettes.light.text,
-    background: palettes.light.background,
-    backgroundElement: palettes.light.surface,
-    backgroundSelected: palettes.light.surfaceAlt,
-    textSecondary: palettes.light.mutedText,
-  },
-  dark: {
-    text: palettes.dark.text,
-    background: palettes.dark.background,
-    backgroundElement: palettes.dark.surface,
-    backgroundSelected: palettes.dark.surfaceAlt,
-    textSecondary: palettes.dark.mutedText,
-  },
-} as const;
-
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
-
-export const Fonts = {
-  sans: "system",
-  serif: "serif",
-  rounded: "system",
-  mono: "monospace",
-} as const;
-
-export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
-} as const;

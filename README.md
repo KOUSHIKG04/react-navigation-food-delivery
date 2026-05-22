@@ -10,7 +10,6 @@ This Expo React Native app demonstrates the main React Navigation patterns in on
 - Route params from Home to Restaurant Detail
 - Cart-driven Orders badge
 - Programmatic navigation with `navigate`, `goBack`, `replace`, and `reset`
-- Deep linking with `foodapp://restaurant/123`
 
 ## Tech Stack
 
@@ -26,12 +25,6 @@ This Expo React Native app demonstrates the main React Navigation patterns in on
 ```bash
 npm install
 npm start
-```
-
-Useful deep-link test:
-
-```bash
-npx uri-scheme open "foodapp://restaurant/123" --android
 ```
 
 ## Navigation Structure
@@ -60,31 +53,11 @@ Root Stack
     `-- Help
 ```
 
-## Deep Linking Setup
-
-The app scheme is configured in `app.json`:
-
-```json
-{
-  "expo": {
-    "scheme": "foodapp"
-  }
-}
-```
-
-`App.tsx` defines the linking config and handles incoming restaurant URLs:
-
-```text
-foodapp://restaurant/123
-```
-
-opens `Restaurant Detail` with restaurant ID `123`.
-
 ## Assignment Coverage
 
 - Login flow persists through app reload.
 - `replace` is used from Cart to return to Home without keeping Cart in the stack.
-- `reset` is used from Cart and during deep-link routing.
+- `reset` is used from Cart to return to a clean Home stack.
 - `navigate` is used for restaurant and cart transitions.
 - `goBack` is exposed from detail/cart screens.
 - Orders tab shows a badge when cart count is greater than zero.
@@ -98,8 +71,8 @@ opens `Restaurant Detail` with restaurant ID `123`.
 
 ## Submission Links
 
-- Public GitHub repository: Add link here
-- 2-minute demo video: Add link here
+- Public GitHub repository: https://github.com/KOUSHIKG04/react-navigation-food-delivery
+- 2-minute demo video: https://github.com/user-attachments/assets/a1e272a6-fe40-49f4-b5e9-dd7d7c8427df
 
 ## Demo Checklist
 
@@ -110,7 +83,6 @@ opens `Restaurant Detail` with restaurant ID `123`.
 - Cart navigation
 - Drawer from Profile
 - Orders badge
-- Deep link opening Restaurant Detail
 - App reload with persisted auth state
 
 ## Screenshots
@@ -121,7 +93,6 @@ Add screenshots here after recording the demo.
 
 - Authentication is intentionally mocked for the assignment.
 - Cart state is in memory; only the required mock auth/onboarding state is persisted.
-- Deep-linked restaurants use the URL ID and a fallback display name when opened directly.
 
 ## Project Structure
 
@@ -134,6 +105,6 @@ src/
 |-- screens/onboarding/   onboarding flow
 |-- screens/home/         home stack screens
 |-- screens/tabs/         bottom-tab screens
-|-- screens/drawer/       drawer secondary screens
+|-- screens/profile/      profile stack and drawer secondary screens
 `-- state/                app state and persistence
 ```

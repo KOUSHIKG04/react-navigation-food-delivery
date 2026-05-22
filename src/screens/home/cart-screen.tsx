@@ -9,7 +9,6 @@ import { useAppTheme } from "../../state/theme-context";
 
 export function CartScreen({
   navigation,
-  route,
 }: NativeStackScreenProps<HomeStackParamList, "Cart">) {
   const { cartItems, cartTotal, decreaseQuantity, increaseQuantity } = useAppState();
   const { colors } = useAppTheme();

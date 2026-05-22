@@ -7,13 +7,13 @@ import { useAppState } from "../../state/app-context";
 import { useAppTheme } from "../../state/theme-context";
 
 export function OnboardingScreen() {
-  const { completeOnboarding } = useAppState();
+  const { finishOnboarding } = useAppState();
   const { colors } = useAppTheme();
   const { height } = useWindowDimensions();
   const isCompact = height < 720;
 
-  async function handleStart() {
-    await completeOnboarding();
+  function handleStart() {
+    finishOnboarding();
   }
 
   return (
