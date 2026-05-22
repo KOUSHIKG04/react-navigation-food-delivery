@@ -72,7 +72,10 @@ Root Stack
 ## Submission Links
 
 - Public GitHub repository: https://github.com/KOUSHIKG04/react-navigation-food-delivery
-- 2-minute demo video: https://github.com/user-attachments/assets/a1e272a6-fe40-49f4-b5e9-dd7d7c8427df
+
+## Demo Video
+
+https://github.com/user-attachments/assets/a1e272a6-fe40-49f4-b5e9-dd7d7c8427df
 
 ## Demo Checklist
 
