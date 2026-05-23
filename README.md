@@ -53,6 +53,42 @@ Root Stack
     `-- Help
 ```
 
+## App Flow Diagram
+
+```mermaid
+flowchart TD
+    A[App launch] --> B[Load persisted demo state]
+    B --> C{Logged in?}
+    C -- No --> D[Auth Stack: Login]
+    D -- login() stores auth state --> E{Seen onboarding?}
+    C -- Yes --> E
+    E -- No --> F[Onboarding]
+    F -- finishOnboarding() stores onboarding state --> G[Main Drawer]
+    E -- Yes --> G
+
+    G --> H[Tabs]
+    H --> I[Home Tab: Restaurant Stack]
+    H --> J[Search]
+    H --> K[Orders]
+    H --> L[Profile Stack]
+
+    I --> M[Home]
+    M -- select restaurant with params --> N[Restaurant Detail]
+    N -- add/increase/decrease dish --> O[Cart state]
+    O -- cartCount > 0 --> P[Orders tab badge]
+    N -- View Cart --> Q[Cart]
+    Q -- Add More / goBack() --> N
+    Q -- Home / replace() --> M
+    Q -- Reset / reset() --> M
+
+    L --> R[Profile]
+    R -- open drawer --> S[Drawer menu]
+    S --> T[My Orders]
+    S --> U[Settings]
+    S --> V[Help]
+    S -- Logout clears session/cart/orders --> D
+```
+
 ## Assignment Coverage
 
 - Login flow persists through app reload.
